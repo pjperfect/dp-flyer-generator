@@ -1,3 +1,4 @@
+// DP / Flyer Generator (client-side)
 (() => {
   const CANVAS_SIZE = 2048;
 
@@ -16,6 +17,11 @@
   const offyEl = document.getElementById('offy');
   const resetBtn = document.getElementById('reset');
   const dlBtn = document.getElementById('download');
+
+  // Fullscreen preview modal
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImg');
+  const closeModalBtn = document.getElementById('closeModal');
 
   const frameImg = new Image();
   frameImg.src = 'frame.png';
@@ -125,6 +131,26 @@
     a.download = 'flyer.png';
     a.href = canvas.toDataURL('image/png');
     a.click();
+  });
+
+  // Full screen preview
+  function openModal() {
+    // Render a fresh frame and show as an image (fast + sharp on mobile)
+    modalImg.src = canvas.toDataURL('image/png');
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('noscroll');
+  }
+  function closeModal() {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('noscroll');
+  }
+
+  canvas.addEventListener('click', openModal);
+  closeModalBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
   });
 
   // initial
